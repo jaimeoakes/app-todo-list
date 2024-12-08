@@ -1,28 +1,62 @@
-const todoList = ['make dinner', 'wash dishes'];
+// Array inicial de tarefas
+const todoList = [
+  {
+    name: 'make dinner',
+    dueDate: '2024-12-22'
+  },
+  {
+    name: 'wash dishes',
+    dueDate: '2024-12-22'
+  },
+  {
+    name: 'Walk the dogs',
+    dueDate: '2024-12-22'
+  },
+  {
+    name: 'take a shower',
+    dueDate: '2024-12-22'
+  }
+];
 
-randerTodoList();
+// Renderiza a lista de tarefas na tela
+renderTodoList();
 
-function randerTodoList() {
+function renderTodoList() {
   let todoListHTML = '';
 
-  for (let i = 0; i < todoList.length; i++) {
-    const todo = todoList[i];
-    const html = `<p>${todo}</p>`;
+  todoList.forEach(function (todoObject, index) {
+    const { name, dueDate } = todoObject;
+    const html = `
+      <div>${name}</div> 
+      <div>${dueDate}</div>
+      <button onclick="
+        todoList.splice(${index}, 1);
+        renderTodoList();
+      " class="delete-todo-button">Delete</button>
+    `;
     todoListHTML += html;
-  }
-  console.log(todoListHTML);
-
+  });
   document.querySelector('.js-todo-list').innerHTML = todoListHTML;
 }
 
+// Adiciona uma nova tarefa à lista
 function addTodo() {
   const inputElement = document.querySelector('.js-name-input');
   const name = inputElement.value;
 
-  todoList.push(name);
-  console.log(todoList);
+  const dateInputElement = document.querySelector('.js-due-date-input');
+  const dueDate = dateInputElement.value;
 
-  inputElement.value = '';
+  // Validação para evitar campos vazios
+  if (name === '' || dueDate === '') {
+    alert('Please fill out both fields');
+    return;
+  }
 
-  randerTodoList();
+  todoList.push({ name, dueDate }); // Adiciona a nova tarefa ao array
+
+  inputElement.value = ''; // Limpa o campo de entrada de texto
+  dateInputElement.value = ''; // Limpa o campo de data
+
+  renderTodoList(); // Re-renderiza a lista de tarefas
 }
